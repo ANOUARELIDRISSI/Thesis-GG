@@ -1,0 +1,9 @@
+Variable,Series Length,Best Model,CV-RMSE,CV-MAPE (%),CV-R²,Rationale
+Cereal Production (000 MT),LONG (>30 yrs),RandomForest,2771.3804,23.42,-0.606,ML / ensemble models preferred
+Caloric Availability (kcal/cap/day),LONG (>30 yrs),"ARIMALite(3,1)",61.2369,1.57,-0.0435,ML / ensemble models preferred
+Cereal Import Dependency (%),LONG (>30 yrs),RandomForest,17.2967,162.46,-0.8628,ML / ensemble models preferred
+Cereal Self-Sufficiency (%),LONG (>30 yrs),RandomForest,15.6567,17.86,-0.8544,ML / ensemble models preferred
+Irrigated Area (000 ha),LONG (>30 yrs),PolyTrend(2),77.2394,3.41,0.1348,ML / ensemble models preferred
+Undernourishment Prevalence (%),LONG (>30 yrs),PolyTrend(2),0.3661,7.91,-0.8265,ML / ensemble models preferred
+Food Imports (M USD),LONG (>30 yrs),PolyTrend(2),236.782,5.11,0.5604,ML / ensemble models preferred
+Food Exports (M USD),LONG (>30 yrs),PolyTrend(2),236.7728,5.31,0.354,ML / ensemble models preferred

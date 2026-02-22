@@ -1,0 +1,6 @@
+Variable,Best Model,CV-RMSE,CV-MAPE (%),CV-R²
+Agricultural GDP (Bn MAD),PolyTrend(2),11.4131,13.25,-4.4969
+Agricultural Investment (Bn MAD),PolyTrend(2),3.0806,7.09,0.3337
+Labor Productivity (000 MAD/worker),PolyTrend(2),3038.8901,13.49,-4.9692
+Fertilizer Use (kg/ha),PolyTrend(2),5.3897,5.89,-0.1792
+Tractor Density (per 000 ha),PolyTrend(2),1.273,4.97,0.329

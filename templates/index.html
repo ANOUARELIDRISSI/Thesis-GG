@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morocco Génération Green 2030 - Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            padding: 30px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .section h2 {
+            color: #1e3c72;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+        
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        select, button {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+        
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .models-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .models-table th {
+            background: #1e3c72;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        .models-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .models-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .best-model {
+            background: #d4edda !important;
+            font-weight: 600;
+        }
+        
+        .goal-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+        
+        .goal-achieved {
+            background: #28a745;
+            color: white;
+        }
+        
+        .goal-not-achieved {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+            font-weight: 600;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #dc3545;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .summary-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-top: 4px solid #667eea;
+        }
+        
+        .summary-card h3 {
+            color: #1e3c72;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .summary-card .value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+            margin: 10px 0;
+        }
+        
+        .summary-card .label {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        canvas {
+            max-width: 100%;
+            height: auto !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌾 Morocco Génération Green 2030</h1>
+            <p>Interactive Dashboard - Data Analysis, Model Training & SDG Goal Forecasting</p>
+        </div>
+        
+        <div class="main-content">
+            <!-- Question Selection -->
+            <div class="section">
+                <h2>1. Select Analysis Question & Target Variable</h2>
+                <p style="margin-bottom: 15px; color: #666;">Choose a question and select a target variable with a Génération Green 2030 goal to analyze.</p>
+                <div class="controls">
+                    <div class="control-group">
+                        <label for="questionSelect">Question:</label>
+                        <select id="questionSelect">
+                            <option value="">-- Select a Question --</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label for="variableSelect">Target Variable (with GG 2030 Goal):</label>
+                        <select id="variableSelect" disabled>
+                            <option value="">-- Select a Target Variable --</option>
+                        </select>
+                    </div>
+                </div>
+                <button id="loadDataBtn" disabled>📊 Load Data</button>
+            </div>
+            
+            <!-- Data Visualization -->
+            <div class="section" id="dataSection" style="display: none;">
+                <h2>2. Historical Data</h2>
+                <div class="chart-container">
+                    <canvas id="dataChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Model Training -->
+            <div class="section" id="trainingSection" style="display: none;">
+                <h2>3. Train & Compare Models</h2>
+                <button id="trainBtn">🤖 Train All Models</button>
+                <div id="modelsResult"></div>
+            </div>
+            
+            <!-- Forecasting -->
+            <div class="section" id="forecastSection" style="display: none;">
+                <h2>4. Forecast & Goal Achievement</h2>
+                <button id="forecastBtn">🔮 Generate Forecast (2024-2030)</button>
+                <button id="scenariosBtn" style="margin-left: 10px; background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);">🎯 Explore What-If Scenarios</button>
+                <div id="forecastResult"></div>
+            </div>
+            
+            <!-- Summary -->
+            <div class="section" id="summarySection" style="display: none;">
+                <h2>5. Overall Summary - All Indicators</h2>
+                <button id="summaryBtn">📈 Generate Summary Report</button>
+                <div id="summaryResult"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script>
+        let currentQuestion = null;
+        let currentVariable = null;
+        let dataChart = null;
+        let forecastChart = null;
+        
+        // Load questions on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadQuestions();
+        });
+        
+        // Load available questions
+        async function loadQuestions() {
+            try {
+                const response = await fetch('/api/questions');
+                const questions = await response.json();
+                
+                const select = document.getElementById('questionSelect');
+                questions.forEach(q => {
+                    const option = document.createElement('option');
+                    option.value = q.id;
+                    option.textContent = `Q${q.id}: ${q.name} - ${q.description}`;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error loading questions:', error);
+            }
+        }
+        
+        // Question selection handler
+        document.getElementById('questionSelect').addEventListener('change', async function() {
+            currentQuestion = this.value;
+            const variableSelect = document.getElementById('variableSelect');
+            const loadBtn = document.getElementById('loadDataBtn');
+            
+            if (!currentQuestion) {
+                variableSelect.disabled = true;
+                loadBtn.disabled = true;
+                return;
+            }
+            
+            // Load target variables for this question
+            try {
+                const response = await fetch(`/api/question/${currentQuestion}/variables`);
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                variableSelect.innerHTML = '<option value="">-- Select a Target Variable --</option>';
+                
+                if (data.variables.length === 0) {
+                    variableSelect.innerHTML += '<option value="" disabled>No target variables available</option>';
+                } else {
+                    data.variables.forEach(v => {
+                        const option = document.createElement('option');
+                        option.value = v.name;
+                        const direction = v.direction === 'higher' ? '↑' : '↓';
+                        option.textContent = `${v.label} (Target: ${v.target} ${direction})`;
+                        variableSelect.appendChild(option);
+                    });
+                }
+                
+                variableSelect.disabled = false;
+            } catch (error) {
+                console.error('Error loading variables:', error);
+                variableSelect.innerHTML = '<option value="">Error loading variables</option>';
+            }
+        });
+        
+        // Variable selection handler
+        document.getElementById('variableSelect').addEventListener('change', function() {
+            currentVariable = this.value;
+            document.getElementById('loadDataBtn').disabled = !currentVariable;
+        });
+        
+        // Load data button
+        document.getElementById('loadDataBtn').addEventListener('click', async function() {
+            if (!currentQuestion || !currentVariable) return;
+            
+            try {
+                const response = await fetch(`/api/question/${currentQuestion}/data/${currentVariable}`);
+                const data = await response.json();
+                
+                // Show data section
+                document.getElementById('dataSection').style.display = 'block';
+                document.getElementById('trainingSection').style.display = 'block';
+                document.getElementById('summarySection').style.display = 'block';
+                
+                // Plot data
+                plotData(data);
+                
+            } catch (error) {
+                console.error('Error loading data:', error);
+                alert('Error loading data: ' + error.message);
+            }
+        });
+        
+        // Plot historical data
+        function plotData(data) {
+            const ctx = document.getElementById('dataChart');
+            
+            if (dataChart) {
+                dataChart.destroy();
+            }
+            
+            dataChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.years,
+                    datasets: [{
+                        label: data.variable.replace(/_/g, ' ').toUpperCase(),
+                        data: data.values,
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Historical Data (1990-2023)',
+                            font: { size: 16, weight: 'bold' }
+                        },
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            title: {
+                                display: true,
+                                text: data.variable.replace(/_/g, ' ')
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Year'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Train models button
+        document.getElementById('trainBtn').addEventListener('click', async function() {
+            if (!currentQuestion || !currentVariable) return;
+            
+            const resultDiv = document.getElementById('modelsResult');
+            resultDiv.innerHTML = '<div class="loading">🔄 Training models... Please wait...</div>';
+            
+            try {
+                const response = await fetch(`/api/question/${currentQuestion}/train`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ variable: currentVariable })
+                });
+                
+                const data = await response.json();
+                
+                // Display model comparison table
+                let html = `
+                    <div style="margin-top: 20px;">
+                        <p><strong>Series Info:</strong> ${data.series_info}</p>
+                        <p><strong>Best Model:</strong> <span style="color: #28a745; font-weight: bold;">${data.best_model}</span></p>
+                        <table class="models-table">
+                            <thead>
+                                <tr>
+                                    <th>Model</th>
+                                    <th>CV-RMSE</th>
+                                    <th>CV-MAPE (%)</th>
+                                    <th>CV-R²</th>
+                                    <th>Std-RMSE</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+                
+                data.models.forEach((model, idx) => {
+                    const rowClass = idx === 0 ? 'best-model' : '';
+                    html += `
+                        <tr class="${rowClass}">
+                            <td>${model.Model}</td>
+                            <td>${model['CV-RMSE'].toFixed(4)}</td>
+                            <td>${model['CV-MAPE (%)'].toFixed(2)}</td>
+                            <td>${model['CV-R²'].toFixed(4)}</td>
+                            <td>${model['Std-RMSE'].toFixed(4)}</td>
+                        </tr>
+                    `;
+                });
+                
+                html += `
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                
+                resultDiv.innerHTML = html;
+                
+                // Show forecast section
+                document.getElementById('forecastSection').style.display = 'block';
+                
+            } catch (error) {
+                console.error('Error training models:', error);
+                resultDiv.innerHTML = `<div class="error">Error training models: ${error.message}</div>`;
+            }
+        });
+        
+        // Forecast button
+        document.getElementById('forecastBtn').addEventListener('click', async function() {
+            if (!currentQuestion || !currentVariable) return;
+            
+            const resultDiv = document.getElementById('forecastResult');
+            resultDiv.innerHTML = '<div class="loading">🔄 Generating forecast... Please wait...</div>';
+            
+            try {
+                const response = await fetch(`/api/question/${currentQuestion}/forecast`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ variable: currentVariable, horizon: 7 })
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                // Display forecast chart
+                let html = '<div class="chart-container"><canvas id="forecastChart"></canvas></div>';
+                
+                // Goal achievement badge
+                if (data.goal_achieved !== null) {
+                    const badgeClass = data.goal_achieved ? 'goal-achieved' : 'goal-not-achieved';
+                    const badgeText = data.goal_achieved ? '✓ GOAL ACHIEVED' : '✗ GOAL NOT ACHIEVED';
+                    html += `
+                        <div style="margin-top: 20px; text-align: center;">
+                            <span class="goal-badge ${badgeClass}">${badgeText}</span>
+                            <p style="margin-top: 10px;">
+                                <strong>2030 Forecast:</strong> ${data.forecast_2030.toFixed(2)} | 
+                                <strong>Target:</strong> ${data.target_value.toFixed(2)} | 
+                                <strong>Direction:</strong> ${data.target_direction}
+                            </p>
+                        </div>
+                    `;
+                    
+                    // Show policy scenarios if goal not achieved
+                    if (!data.goal_achieved && data.policy_scenarios && data.policy_scenarios.length > 0) {
+                        html += `
+                            <div style="margin-top: 30px; padding: 20px; background: #fff3cd; border-radius: 10px; border-left: 4px solid #ffc107;">
+                                <h3 style="color: #856404; margin-bottom: 15px;">📋 Policy Scenarios to Achieve Goal</h3>
+                                <p style="color: #856404; margin-bottom: 15px;">The baseline forecast does not achieve the 2030 target. Here are policy interventions that could help:</p>
+                                <div id="policyScenarios"></div>
+                            </div>
+                        `;
+                    }
+                }
+                
+                resultDiv.innerHTML = html;
+                
+                // Plot forecast with policy scenarios
+                plotForecast(data);
+                
+                // Display policy scenarios table if available
+                if (!data.goal_achieved && data.policy_scenarios && data.policy_scenarios.length > 0) {
+                    displayPolicyScenarios(data.policy_scenarios, data.target_value);
+                }
+                
+            } catch (error) {
+                console.error('Error generating forecast:', error);
+                resultDiv.innerHTML = `<div class="error">Error generating forecast: ${error.message}</div>`;
+            }
+        });
+        
+        // Display policy scenarios
+        function displayPolicyScenarios(scenarios, target) {
+            const container = document.getElementById('policyScenarios');
+            if (!container) return;
+            
+            let html = '<table class="models-table" style="margin-top: 10px;"><thead><tr>';
+            html += '<th>Policy Scenario</th><th>Description</th><th>2030 Forecast</th><th>Gap to Target</th><th>Status</th>';
+            html += '</tr></thead><tbody>';
+            
+            scenarios.forEach(scenario => {
+                const statusClass = scenario.achieves_goal ? 'goal-achieved' : 'goal-not-achieved';
+                const statusText = scenario.achieves_goal ? '✓ Achieves Goal' : `✗ Gap: ${scenario.gap.toFixed(1)}`;
+                
+                html += `
+                    <tr>
+                        <td><strong>${scenario.name}</strong></td>
+                        <td>${scenario.description}</td>
+                        <td>${scenario.forecast_2030.toFixed(2)}</td>
+                        <td>${scenario.gap.toFixed(2)}</td>
+                        <td><span class="goal-badge ${statusClass}" style="font-size: 0.8em; padding: 3px 10px;">${statusText}</span></td>
+                    </tr>
+                `;
+            });
+            
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+        
+        // Plot forecast
+        function plotForecast(data) {
+            const ctx = document.getElementById('forecastChart');
+            
+            if (forecastChart) {
+                forecastChart.destroy();
+            }
+            
+            // Combine historical and forecast years for continuous plot
+            const allYears = [...data.historical_years, ...data.forecast_years];
+            
+            // Create continuous data arrays
+            const historicalData = [...data.historical_values, ...Array(data.forecast_years.length).fill(null)];
+            const forecastData = [...Array(data.historical_years.length - 1).fill(null), 
+                                   data.historical_values[data.historical_values.length - 1],
+                                   ...data.forecast_values];
+            const lowerBound = [...Array(data.historical_years.length - 1).fill(null),
+                               data.historical_values[data.historical_values.length - 1],
+                               ...data.lower_95];
+            const upperBound = [...Array(data.historical_years.length - 1).fill(null),
+                               data.historical_values[data.historical_values.length - 1],
+                               ...data.upper_95];
+            
+            const datasets = [
+                {
+                    label: 'Historical',
+                    data: historicalData,
+                    borderColor: '#1e3c72',
+                    backgroundColor: 'rgba(30, 60, 114, 0.1)',
+                    borderWidth: 3,
+                    pointRadius: 2,
+                    fill: false
+                },
+                {
+                    label: `Baseline Forecast (${data.model_name})`,
+                    data: forecastData,
+                    borderColor: '#ff6b6b',
+                    backgroundColor: 'rgba(255, 107, 107, 0.1)',
+                    borderWidth: 3,
+                    borderDash: [5, 5],
+                    pointRadius: 4,
+                    fill: false
+                },
+                {
+                    label: '95% CI Lower',
+                    data: lowerBound,
+                    borderColor: 'rgba(255, 107, 107, 0.3)',
+                    borderWidth: 1,
+                    fill: false,
+                    pointRadius: 0
+                },
+                {
+                    label: '95% CI Upper',
+                    data: upperBound,
+                    borderColor: 'rgba(255, 107, 107, 0.3)',
+                    borderWidth: 1,
+                    fill: '-1',
+                    backgroundColor: 'rgba(255, 107, 107, 0.1)',
+                    pointRadius: 0
+                }
+            ];
+            
+            // Add policy scenarios if available
+            if (data.policy_scenarios && data.policy_scenarios.length > 0) {
+                const colors = ['#2ecc71', '#f39c12', '#9b59b6'];
+                data.policy_scenarios.forEach((scenario, idx) => {
+                    const policyData = [...Array(data.historical_years.length - 1).fill(null),
+                                       data.historical_values[data.historical_values.length - 1],
+                                       ...scenario.forecast];
+                    datasets.push({
+                        label: scenario.name,
+                        data: policyData,
+                        borderColor: colors[idx % colors.length],
+                        backgroundColor: 'transparent',
+                        borderWidth: 2.5,
+                        borderDash: [10, 5],
+                        pointRadius: 3,
+                        fill: false
+                    });
+                });
+            }
+            
+            // Add target line if available
+            if (data.target_value !== null) {
+                datasets.push({
+                    label: 'GG 2030 Target',
+                    data: Array(allYears.length).fill(data.target_value),
+                    borderColor: '#28a745',
+                    borderWidth: 2,
+                    borderDash: [10, 5],
+                    pointRadius: 0,
+                    fill: false
+                });
+            }
+            
+            forecastChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: allYears,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Historical Data & Forecast with Policy Scenarios (1990-2030)',
+                            font: { size: 16, weight: 'bold' }
+                        },
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 15
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += context.parsed.y.toFixed(2);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            title: {
+                                display: true,
+                                text: currentVariable.replace(/_/g, ' ')
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Year'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Explore scenarios button
+        document.getElementById('scenariosBtn').addEventListener('click', async function() {
+            if (!currentQuestion || !currentVariable) return;
+            
+            const resultDiv = document.getElementById('forecastResult');
+            resultDiv.innerHTML = '<div class="loading">🔄 Generating what-if scenarios... Please wait...</div>';
+            
+            try {
+                const response = await fetch(`/api/question/${currentQuestion}/scenarios`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ variable: currentVariable, horizon: 7 })
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                // Display scenarios
+                let html = '<div class="chart-container"><canvas id="forecastChart"></canvas></div>';
+                
+                html += `
+                    <div style="margin-top: 30px; padding: 20px; background: #e8f5e9; border-radius: 10px; border-left: 4px solid #4caf50;">
+                        <h3 style="color: #2e7d32; margin-bottom: 15px;">🎯 What-If Scenario Analysis</h3>
+                        <p style="color: #2e7d32; margin-bottom: 15px;">Explore different future pathways based on varying assumptions and policy interventions.</p>
+                        <div id="scenariosTable"></div>
+                    </div>
+                `;
+                
+                resultDiv.innerHTML = html;
+                
+                // Plot scenarios
+                plotScenarios(data);
+                
+                // Display scenarios table
+                displayScenariosTable(data.scenarios, data.target_value);
+                
+            } catch (error) {
+                console.error('Error generating scenarios:', error);
+                resultDiv.innerHTML = `<div class="error">Error generating scenarios: ${error.message}</div>`;
+            }
+        });
+        
+        // Display scenarios table
+        function displayScenariosTable(scenarios, target) {
+            const container = document.getElementById('scenariosTable');
+            if (!container) return;
+            
+            let html = '<table class="models-table" style="margin-top: 10px;"><thead><tr>';
+            html += '<th>Scenario</th><th>Description</th><th>2030 Forecast</th><th>vs Target</th><th>Status</th>';
+            html += '</tr></thead><tbody>';
+            
+            scenarios.forEach(scenario => {
+                let statusClass = '';
+                let statusText = '';
+                
+                if (scenario.achieves_goal === null) {
+                    statusClass = '';
+                    statusText = 'N/A';
+                } else if (scenario.achieves_goal) {
+                    statusClass = 'goal-achieved';
+                    statusText = '✓ Achieves Goal';
+                } else {
+                    statusClass = 'goal-not-achieved';
+                    statusText = `✗ Gap: ${scenario.gap.toFixed(2)}`;
+                }
+                
+                // Color code by scenario type
+                let rowStyle = '';
+                if (scenario.name === 'Pessimistic') rowStyle = 'background: #ffebee;';
+                else if (scenario.name === 'Business as Usual') rowStyle = 'background: #fff9c4;';
+                else if (scenario.name === 'Moderate') rowStyle = 'background: #e1f5fe;';
+                else if (scenario.name === 'Optimistic') rowStyle = 'background: #e8f5e9;';
+                else if (scenario.name === 'Transformative') rowStyle = 'background: #f3e5f5;';
+                
+                html += `
+                    <tr style="${rowStyle}">
+                        <td><strong>${scenario.name}</strong></td>
+                        <td style="font-size: 0.9em;">${scenario.description}</td>
+                        <td><strong>${scenario.forecast_2030.toFixed(2)}</strong></td>
+                        <td>${target ? (scenario.forecast_2030 - target).toFixed(2) : 'N/A'}</td>
+                        <td><span class="goal-badge ${statusClass}" style="font-size: 0.8em; padding: 3px 10px;">${statusText}</span></td>
+                    </tr>
+                `;
+            });
+            
+            html += '</tbody></table>';
+            
+            html += `
+                <div style="margin-top: 15px; padding: 15px; background: white; border-radius: 8px; border-left: 3px solid #2196f3;">
+                    <h4 style="color: #1976d2; margin-bottom: 10px;">💡 Scenario Interpretation</h4>
+                    <ul style="color: #555; line-height: 1.8;">
+                        <li><strong>Pessimistic:</strong> Adverse conditions (climate shocks, reduced investment, policy delays)</li>
+                        <li><strong>Business as Usual:</strong> Current trends continue without major changes</li>
+                        <li><strong>Moderate:</strong> Incremental improvements through targeted interventions</li>
+                        <li><strong>Optimistic:</strong> Favorable conditions with strong policy implementation</li>
+                        <li><strong>Transformative:</strong> Game-changing innovations and comprehensive reforms</li>
+                    </ul>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+        }
+        
+        // Plot scenarios
+        function plotScenarios(data) {
+            const ctx = document.getElementById('forecastChart');
+            
+            if (forecastChart) {
+                forecastChart.destroy();
+            }
+            
+            // Get historical data from cache (if available)
+            const allYears = [...Array.from({length: 34}, (_, i) => 1990 + i), ...data.forecast_years];
+            
+            const datasets = [];
+            
+            // Add scenario lines
+            const colors = {
+                'Pessimistic': '#f44336',
+                'Business as Usual': '#ff9800',
+                'Moderate': '#2196f3',
+                'Optimistic': '#4caf50',
+                'Transformative': '#9c27b0'
+            };
+            
+            data.scenarios.forEach(scenario => {
+                const scenarioData = [...Array(34).fill(null), ...scenario.forecast];
+                datasets.push({
+                    label: scenario.name,
+                    data: scenarioData,
+                    borderColor: colors[scenario.name] || '#666',
+                    backgroundColor: 'transparent',
+                    borderWidth: 2.5,
+                    borderDash: scenario.name === 'Business as Usual' ? [5, 5] : [],
+                    pointRadius: 3,
+                    fill: false
+                });
+            });
+            
+            // Add target line if available
+            if (data.target_value !== null) {
+                datasets.push({
+                    label: 'GG 2030 Target',
+                    data: Array(allYears.length).fill(data.target_value),
+                    borderColor: '#000',
+                    borderWidth: 2,
+                    borderDash: [10, 5],
+                    pointRadius: 0,
+                    fill: false
+                });
+            }
+            
+            forecastChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: allYears,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'What-If Scenario Analysis (2024-2030)',
+                            font: { size: 16, weight: 'bold' }
+                        },
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 15
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += context.parsed.y.toFixed(2);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            title: {
+                                display: true,
+                                text: currentVariable.replace(/_/g, ' ')
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Year'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Summary button
+        document.getElementById('summaryBtn').addEventListener('click', async function() {
+            if (!currentQuestion) return;
+            
+            const resultDiv = document.getElementById('summaryResult');
+            resultDiv.innerHTML = '<div class="loading">🔄 Generating summary... Please wait...</div>';
+            
+            try {
+                const response = await fetch(`/api/question/${currentQuestion}/summary`);
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                if (!data.indicators || data.indicators.length === 0) {
+                    resultDiv.innerHTML = '<div class="error">No indicators found for this question.</div>';
+                    return;
+                }
+                
+                let html = '<div class="summary-grid">';
+                
+                data.indicators.forEach(indicator => {
+                    const goalClass = indicator.goal_achieved === null ? '' : 
+                                     indicator.goal_achieved ? 'goal-achieved' : 'goal-not-achieved';
+                    const goalText = indicator.goal_achieved === null ? 'N/A' :
+                                    indicator.goal_achieved ? '✓ ACHIEVED' : '✗ NOT ACHIEVED';
+                    
+                    html += `
+                        <div class="summary-card">
+                            <h3>${indicator.variable.replace(/_/g, ' ').toUpperCase()}</h3>
+                            <div class="label">Current (2023)</div>
+                            <div class="value">${indicator.current_value.toFixed(2)}</div>
+                            <div class="label">Forecast 2030</div>
+                            <div class="value">${indicator.forecast_2030.toFixed(2)}</div>
+                            ${indicator.target_value !== null ? `
+                                <div class="label">Target 2030</div>
+                                <div class="value">${indicator.target_value.toFixed(2)}</div>
+                            ` : ''}
+                            <div style="margin-top: 10px;">
+                                <span class="goal-badge ${goalClass}">${goalText}</span>
+                            </div>
+                            <div class="label" style="margin-top: 10px;">Best Model: ${indicator.best_model}</div>
+                        </div>
+                    `;
+                });
+                
+                html += '</div>';
+                resultDiv.innerHTML = html;
+                
+            } catch (error) {
+                console.error('Error generating summary:', error);
+                resultDiv.innerHTML = `<div class="error">Error generating summary: ${error.message}</div>`;
+            }
+        });
+    </script>
+</body>
+</html>

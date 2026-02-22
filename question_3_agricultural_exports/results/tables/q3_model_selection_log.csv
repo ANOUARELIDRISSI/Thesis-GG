@@ -1,0 +1,10 @@
+Variable,Best Model,CV-RMSE,CV-MAPE (%),CV-R²
+Agricultural Exports (Bn MAD),PolyTrend(2),2.3341,5.66,0.1945
+Export/GDP Ratio,PolyTrend(2),0.068,13.47,-1.0584
+Agricultural GDP (Bn MAD),PolyTrend(2),12.9219,13.44,-3.376
+Citrus Exports (Bn MAD),PolyTrend(2),0.828,7.43,-0.6382
+Vegetable Exports (Bn MAD),PolyTrend(2),1.1612,8.42,0.197
+Olive Oil Exports (Bn MAD),HoltWinters,0.5423,10.65,-0.0341
+Processed Food Exports (Bn MAD),PolyTrend(2),0.267,3.99,0.7051
+Processed Share of Exports,GradientBoosting,0.0086,5.08,-0.8352
+Export Market Diversification Index,HoltWinters,0.0154,2.06,-0.7574
