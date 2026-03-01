@@ -14,29 +14,57 @@ All files have been created and the application is now fully functional!
 
 ## 🚀 Quick Start
 
-### 1. Install Dependencies
+### Option 1: Use the Launcher Script (Easiest) ⭐
+
+**Just Double-Click** `start_dashboard.bat`
+
+The script will automatically:
+- ✅ Check if virtual environment exists (create if not)
+- ✅ Check if requirements are installed (install if not)
+- ✅ Activate virtual environment
+- ✅ Start the Flask app
+
+**What you'll see:**
+```
+============================================================
+  Morocco Generation Green 2030 - Dashboard Launcher
+============================================================
+
+[INFO] Virtual environment found.
+[INFO] Activating virtual environment...
+[INFO] Requirements already installed.
+
+============================================================
+  Starting Flask Dashboard...
+============================================================
+
+  Open your browser and go to: http://127.0.0.1:5000
+```
+
+Then open your browser to: **http://127.0.0.1:5000**
+
+### Option 2: Quick Start (If Already Set Up)
+
+Double-click `quick_start.bat` - faster, assumes venv exists
+
+### Option 3: Manual Setup
 
 ```bash
-# Create virtual environment (if not exists)
+# 1. Create virtual environment (if not exists)
 python -m venv venv
 
-# Activate virtual environment
+# 2. Activate virtual environment
 venv\Scripts\activate  # Windows
 # source venv/bin/activate  # Linux/Mac
 
-# Install packages
+# 3. Install packages
 pip install -r requirements.txt
-```
 
-### 2. Run Dashboard
-
-```bash
+# 4. Run dashboard
 python app.py
 ```
 
-### 3. Open Browser
-
-Navigate to: **http://127.0.0.1:5000**
+Then open your browser to: **http://127.0.0.1:5000**
 
 ## 📊 Features
 
@@ -217,6 +245,8 @@ GET  /api/question/<id>/summary              - Get summary
 
 ```
 .
+├── start_dashboard.bat             # 🚀 Auto-setup launcher (RECOMMENDED)
+├── quick_start.bat                 # Quick launcher (if venv exists)
 ├── app.py                          # Flask backend (main application)
 ├── templates/
 │   └── index.html                  # Dashboard UI

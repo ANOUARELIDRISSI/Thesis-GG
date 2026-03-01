@@ -113,18 +113,18 @@ def get_variables(question_id):
     """Get target variables (with GG 2030 goals) for a question"""
     try:
         df, targets = load_question_data(question_id)
-        
-        # Only return variables that have targets (GG 2030 goals)
+        # Return both targeted and non-targeted numeric variables
         target_variables = []
-        for variable, target_info in targets.items():
-            if variable in df.columns and target_info.get("value") is not None:
-                target_variables.append({
-                    "name": variable,
-                    "label": variable.replace('_', ' ').title(),
-                    "target": target_info.get("value"),
-                    "direction": target_info.get("direction")
-                })
-        
+        for col in df.select_dtypes(include=[np.number]).columns.tolist():
+            if col == "Year":
+                continue
+            info = targets.get(col, {})
+            target_variables.append({
+                "name": col,
+                "label": col.replace('_', ' ').title(),
+                "target": info.get("value"),
+                "direction": info.get("direction")
+            })
         return jsonify({"variables": target_variables})
     except Exception as e:
         return jsonify({"error": str(e)}), 400
@@ -462,34 +462,36 @@ def get_summary(question_id):
             "question_id": question_id,
             "indicators": []
         }
-        
-        for variable, target_info in targets.items():
-            if variable in df.columns:
-                y = df[variable].dropna().values
-                
-                # Quick forecast
-                model_df, best_model, best_name, _ = adaptive_model_selection(y, verbose=False)
-                forecast_values = best_model.predict(7)
-                
-                target_value = target_info.get("value")
-                direction = target_info.get("direction")
-                
-                goal_achieved = None
-                if target_value is not None:
-                    forecast_2030 = float(forecast_values[-1])
-                    if direction == "higher":
-                        goal_achieved = bool(forecast_2030 >= float(target_value))
-                    elif direction == "lower":
-                        goal_achieved = bool(forecast_2030 <= float(target_value))
-                
-                summary["indicators"].append({
-                    "variable": variable,
-                    "current_value": float(y[-1]),
-                    "forecast_2030": float(forecast_values[-1]),
-                    "target_value": target_value,
-                    "goal_achieved": goal_achieved,
-                    "best_model": best_name
-                })
+        # Include all numeric variables (except Year); attach targets when defined
+        numeric_cols = [c for c in df.select_dtypes(include=[np.number]).columns if c != "Year"]
+        for variable in numeric_cols:
+            y = df[variable].dropna().values
+            if len(y) == 0:
+                continue
+
+            model_df, best_model, best_name, _ = adaptive_model_selection(y, verbose=False)
+            forecast_values = best_model.predict(7)
+
+            target_info = targets.get(variable, {})
+            target_value = target_info.get("value")
+            direction = target_info.get("direction")
+
+            goal_achieved = None
+            if target_value is not None and len(forecast_values) > 0:
+                forecast_2030 = float(forecast_values[-1])
+                if direction == "higher":
+                    goal_achieved = bool(forecast_2030 >= float(target_value))
+                elif direction == "lower":
+                    goal_achieved = bool(forecast_2030 <= float(target_value))
+
+            summary["indicators"].append({
+                "variable": variable,
+                "current_value": float(y[-1]),
+                "forecast_2030": float(forecast_values[-1]) if len(forecast_values) > 0 else None,
+                "target_value": target_value,
+                "goal_achieved": goal_achieved,
+                "best_model": best_name
+            })
         
         return jsonify(summary)
         
